@@ -5,6 +5,16 @@ shapecheck is a library to help you ensure tensors are correctly sized at runtim
 ```
 pip install git+https://github.com/rosshemsley/shapecheck
 ```
+## How it works
+Add a decorator to your classes taking multidimensional arrays with a `.shape` attribute.
+For each argument you wish to shapecheck, add a label. This label is a tuple where each element is identified
+one-to-one with an element in the shape.
+
+The label tuple accepts multiple values. Strings are interpreted as dimension names, and allow the dimension to have any size.
+Integer values give the size of the dimension, and tuples allow the naming of individual fields within the dimension.
+For tuples, the shapechecker will ensure that the number of fields in the tuple matches the dimension size.
+
+## Quickstart
 
 ```python
 import shapecheck
