@@ -3,6 +3,7 @@ import inspect
 
 from .enabled import __CHECKS_ENABLED
 
+
 def check_args(*label_args, **label_kwargs):
     if len(label_args) != 0:
         raise ValueError("all arguments must be named arguments")
@@ -11,6 +12,7 @@ def check_args(*label_args, **label_kwargs):
         if not __CHECKS_ENABLED:
             return func
         argspec = inspect.getfullargspec(func)
+
         def wrapper(*args, **kwargs):
             for k, v in label_kwargs.items():
                 idx = argspec.args.index(k)
@@ -21,6 +23,7 @@ def check_args(*label_args, **label_kwargs):
             return func(*args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
@@ -32,17 +35,26 @@ def check(value: Any, label: Tuple[Union[str, Tuple[str]]]):
 
 def _types_match(value, label) -> (bool, str):
     if len(label) != len(value.shape):
-        return False, f"lengths do not match: expected {label} of length {len(label)}, got {value.shape}"
-    
+        return (
+            False,
+            f"lengths do not match: expected {label} of length {len(label)}, got {value.shape}",
+        )
+
     for i, v in enumerate(label):
         if isinstance(v, str):
             continue
         elif isinstance(v, int):
             if v != value.shape[i]:
-                return False, f"got tensor with shape {value.shape}. Dimension {i} should match pattern {v} of size {len(v)}, but got size {value.shape[i]} instead."
+                return (
+                    False,
+                    f"got tensor with shape {value.shape}. Dimension {i} should match pattern {v} of size {len(v)}, but got size {value.shape[i]} instead.",
+                )
         elif isinstance(v, (list, tuple)):
             if len(v) != value.shape[i]:
-                return False, f"got tensor with shape {value.shape}. Dimension {i} should match pattern {v} of size {len(v)}, but got size {value.shape[i]} instead."
+                return (
+                    False,
+                    f"got tensor with shape {value.shape}. Dimension {i} should match pattern {v} of size {len(v)}, but got size {value.shape[i]} instead.",
+                )
 
     return True, ""
 
