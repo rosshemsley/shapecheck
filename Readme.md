@@ -2,6 +2,10 @@
 
 shapecheck is a library to help you ensure tensors are correctly sized at runtime.
 
+```
+pip install git+https://github.com/rosshemsley/shapecheck
+```
+
 ```python
 import shapecheck
 
